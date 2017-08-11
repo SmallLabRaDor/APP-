@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>果壳网</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="stylesheet" href="download/font_trpz9nquicrw9udi/iconfont.css">
+    <link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+
+<header>
+    <section>
+        <span class="iconfont icon-gengduo"></span>
+        <p>果壳网</p>
+        <span class="iconfont icon-sousuo"></span>
+        <span class="iconfont icon-lianxirendengluzhanghao"></span>
+    </section>
+</header>
+<div id="content">
+    <div class="route">
+        <ul>
+            <li class="active">
+                <router-link to="/first">首页</router-link>
+            </li>
+            <li>
+                <router-link to="/second">科学人</router-link>
+            </li>
+            <li>
+                <router-link to="/third">小组</router-link>
+            </li>
+            <li>
+                <router-link to="/four">问答</router-link>
+            </li>
+            <li>
+                <router-link to="/five">MOOC</router-link>
+            </li>
+            <li>
+                <router-link to="/six">在行</router-link>
+            </li>
+        </ul>
+    </div>
+
+    <router-view></router-view>
+
+</div>
+
+
+<!-- 首页  -->
+<template id="first">
+    <div>
+        <div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="images/1_13.gif" alt=""></div>
+                    <div class="swiper-slide"><img src="images/2_02.gif" alt=""></div>
+                    <div class="swiper-slide"><img src="images/3_02.gif" alt=""></div>
+                    <div class="swiper-slide"><img src="images/4_02.gif" alt=""></div>
+                </div>
+                <div class="swiper-pagination">
+                </div>
+            </div>
+        </div>
+        <ul class="banner_ul">
+            <li v-for="item in movies">{{item.user}}</li>
+        </ul>
+
+    </div>
+</template>
+
+
+<!--科学人 -->
+<template id="second">
+    <h1>second</h1>
+</template>
+
+<!--小组 -->
+<template id="third">
+    <h1>third</h1>
+</template>
+
+<!--问答-->
+<template id="four">
+    <h1>four</h1>
+</template>
+
+<!-- MOOC-->
+<template id="five">
+    <h1>five</h1>
+</template>
+
+<!--在行-->
+<template id="six">
+    <h1>six</h1>
+</template>
+</body>
+</html>
+<script src="js/jquery-3.1.1.js"></script>
+<script src="js/swiper-3.4.2.min.js"></script>
+<script src="js/rem.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/vue-router.js"></script>
+<script src="js/vue-resource.js"></script>
+<script>
+
+    /*
+     *  1.定义路由文件
+     *   可以从其他文件import进来
+     * */
+    const First = Vue.component("ulList", {
+        template: "#first",
+//            replace:true,
+        props: {},
+        data: function () {
+            return {
+                movies: {}
+            }
+        },
+        beforeCreate: function () {
+            const This = this;
+            $.get("/add", function (req) {
+                This.movies = req.data
+                console.log(This.movies)
+            })
+        }
+    })
+    const Second = {template: "#second"};
+    const Third = {template: "#third"};
+    const Four = {template: "#four"};
+    const Five = {template: "#five"};
+    const Six = {template: "#six"};
+    /*
+     * 2.定义路由
+     * 每个路由映射一个组件，其中"component"可以是通过 vue-resource.extend()创建组件构造区
+     * 或者，只是一个组件配置对象
+     * */
+    const routes = [
+        {path: '/', redirect: '/first'},
+        {
+            path: '/first',
+            component: First,
+            children: [
+//               { path: '/home/login', component: Login},
+//                { path: '/home/reg', component: Reg}
+            ]
+        },
+        {path: '/second', component: Second},
+        {path: '/third', component: Third},
+        {path: '/four', component: Four},
+        {path: '/five', component: Five},
+        {path: '/six', component: Six}
+    ]
+    /*
+     * 3.创建router 实例，然后传'routes'配置
+     * 你还可以传别的配置参数。
+     * */
+    const router = new VueRouter({
+        routes //(缩写)相当于 routes:routes
+    })
+    const app = new Vue({
+        router
+    }).$mount("#content")
+
+
+    $(".route ul").on("click", "li", function () {
+        $(this).addClass("active").siblings().removeClass("active")
+    })
+    const mySwiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: 2000,//可选选项，自动滑动
+        pagination: '.swiper-pagination',
+        autoplayDisableOnInteraction: false,
+    })
+</script>
